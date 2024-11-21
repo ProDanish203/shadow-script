@@ -11,6 +11,7 @@
 # PUNC - Punctuation
 # WS - Whitespace
 # EOL - End of Line
+from tokens import Integer, Float, Operator
 
 
 class Lexer:
@@ -66,54 +67,3 @@ class Lexer:
         self.idx += 1
         if self.idx < len(self.text):
             self.current_char = self.text[self.idx]
-
-
-# Token class to store the token type and value e.g. Token(INT, 3)
-class Token:
-    def __init__(self, type, value):
-        self.type = type
-        self.value = value
-
-    def __repr__(self):
-        # return f"{self.type}:{self.value}"
-        return f"{self.value}"
-
-
-class Integer(Token):
-    def __init__(self, value):
-        super().__init__("INT", value)
-        self.value = value
-
-    def __repr__(self):
-        return super().__repr__()
-
-
-class Float(Token):
-    def __init__(self, value):
-        super().__init__("FLOAT", value)
-        self.value = value
-
-    def __repr__(self):
-        return super().__repr__()
-
-
-class Operator(Token):
-    def __init__(self, value):
-        super().__init__("OPT", value)
-        self.value = value
-
-    def __repr__(self):
-        return super().__repr__()
-
-
-# while self.idx < len(self.text):
-#     if self.current_char.isspace():
-#         self.advance()
-#     elif self.current_char.isdigit():
-#         self.tokens.append(self.integer())
-#     elif self.current_char == "+":
-#         self.tokens.append(Token("PLUS", self.current_char))
-#         self.advance()
-#     else:
-#         raise Exception("Invalid character")
-# return self.tokens
