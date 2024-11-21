@@ -66,8 +66,6 @@ class Lexer:
         self.idx += 1
         if self.idx < len(self.text):
             self.current_char = self.text[self.idx]
-        else:
-            self.current_char = ""
 
 
 # Token class to store the token type and value e.g. Token(INT, 3)
@@ -77,7 +75,8 @@ class Token:
         self.value = value
 
     def __repr__(self):
-        return f"{self.type}:{self.value}"
+        # return f"{self.type}:{self.value}"
+        return f"{self.value}"
 
 
 class Integer(Token):

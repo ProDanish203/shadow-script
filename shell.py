@@ -1,4 +1,5 @@
 from lexer import Lexer
+from parser import Parser
 
 while True:
     try:
@@ -7,6 +8,11 @@ while True:
         lexer = Lexer(text)
         tokens = lexer.tokenize()
 
+        parser = Parser(tokens)
+        tree = parser.parse()
+
         print(tokens)
+        print(tree)
+        
     except Exception as e:
         print(f"An error occurred: {e}")
