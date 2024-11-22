@@ -1,6 +1,9 @@
 from lexer import Lexer
 from parser import Parser
 from interpreter import Interpreter
+from data import Data
+
+base = Data()
 
 while True:
     try:
@@ -9,10 +12,14 @@ while True:
         lexer = Lexer(text)
         tokens = lexer.tokenize()
 
+        # print(tokens)
+
         parser = Parser(tokens)
         tree = parser.parse()
 
-        interpreter = Interpreter(tree)
+        # print(tree)
+
+        interpreter = Interpreter(tree, base)
         result = interpreter.interpret()
 
         print(result)

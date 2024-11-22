@@ -11,8 +11,31 @@ class Parser:
 
     def factor(self):
         token = self.token
+        # Number
         if token.type == "INT" or token.type == "FLOAT":
             return self.token
+        # Parentheses
+        elif token.value == "(":
+            self.advance()
+            expression = self.boolean_expr()
+            return expression
+        # Variable
+        elif token.type.startswith("VAR"):
+            return self.token
+        # Not operator
+        elif token.value == "not":
+            operator = self.token
+            self.advance()
+            operand = self.boolean_expr()
+
+            return [operator, operand]
+        # Unary operators
+        elif self.token.value == "+" or self.token.value == "-":
+            operator = self.token
+            self.advance()
+            operand = self.boolean_expr()
+
+            return [operator, operand]
 
     # e.g. 2 * 3 -> [2, *, 3]
     def term(self):
@@ -37,8 +60,53 @@ class Parser:
 
         return left_node
 
+    def statement(self):
+        if self.token.type == "DECL":
+            # Variable Assignment
+            self.advance()
+            left_node = self.variable()
+            self.advance()
+            if self.token.value == "=":
+                operation = self.token
+                self.advance()
+                right_node = self.boolean_expr()
+                return [left_node, operation, right_node]
+
+        elif (
+            self.token.type == "INT"
+            or self.token.type == "FLOAT"
+            or self.token.type == "OPT"
+            or self.token.value == "not"
+        ):
+            # Arithmetic Expression
+            return self.boolean_expr()
+
+    def variable(self):
+        if self.token.type.startswith("VAR"):
+            return self.token
+
+    def comp_expr(self):
+        left_node = self.expr()
+        while self.token.type == "COMP":
+            operator = self.token
+            self.advance()
+            right_node = self.expr()
+            left_node = [left_node, operator, right_node]
+
+        return left_node
+
+    def boolean_expr(self):
+        left_node = self.comp_expr()
+        while self.token.value == "and" or self.token.value == "or":
+            operator = self.token
+            self.advance()
+            right_node = self.comp_expr()
+            left_node = [left_node, operator, right_node]
+
+        return left_node
+
     def parse(self):
-        return self.expr()
+        return self.statement()
 
     def advance(self):
         self.idx += 1
