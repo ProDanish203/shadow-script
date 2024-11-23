@@ -20,6 +20,7 @@ from tokens import (
     Variable,
     Boolean,
     Comparison,
+    Reserved,
 )
 
 # make varName = value
@@ -34,6 +35,7 @@ class Lexer:
     boolean = ["and", "or", "not"]
     comparison = ["?=", "<>", ">", "<", ">=", "<="]
     special_characters = "><=?"
+    reserved = ["if", "else", "elif", "do"]
 
     def __init__(self, text):
         self.text = text  # input string, e.g. "2 + 3"
@@ -61,6 +63,8 @@ class Lexer:
                     self.token = Declaration(word)
                 elif word in Lexer.boolean:
                     self.token = Boolean(word)
+                elif word in Lexer.reserved:
+                    self.token = Reserved(word)
                 else:
                     self.token = Variable(word)
 

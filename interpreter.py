@@ -1,6 +1,6 @@
 # Interpreter is responsible for interpreting the AST and executing the code.
 
-from tokens import Integer, Float, Operator
+from tokens import Float, Integer, Reserved
 
 
 class Interpreter:
@@ -70,15 +70,31 @@ class Interpreter:
         operand = getattr(self, f"visit_{operand_type}")(operand.value)
 
         if operator.value == "+":
-            return +operand
+            output = +operand
         elif operator.value == "-":
-            return -operand
+            output = -operand
         elif operator.value == "not":
-            return 1 if not operand else 0
+            output = 1 if not operand else 0
+
+        return Integer(output) if (operand_type == "INT") else Float(output)
 
     def interpret(self, tree=None):
         if tree is None:
             tree = self.tree
+
+        # Conditional
+        if isinstance(tree, list):
+            if isinstance(tree[0], Reserved):
+                for idx, condition in enumerate(tree[1][0]):
+                    evaluation = self.interpret(condition)
+                    if evaluation.value == 1:
+                        return self.interpret(tree[1][1][idx])
+                    else:
+                        return 0
+                if len(tree[1]) == 3:
+                    return self.interpret(tree[1][2])
+                else:
+                    return False
 
         # Unary operation
         if isinstance(tree, list) and len(tree) == 2:

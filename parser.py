@@ -81,6 +81,9 @@ class Parser:
             # Arithmetic Expression
             return self.boolean_expr()
 
+        elif self.token.value == "if":
+            return [self.token, self.if_statements()]
+
     def variable(self):
         if self.token.type.startswith("VAR"):
             return self.token
@@ -104,6 +107,40 @@ class Parser:
             left_node = [left_node, operator, right_node]
 
         return left_node
+
+    def if_statement(self):
+        self.advance()
+        condition = self.boolean_expr()
+
+        if self.token.value == "do":
+            self.advance()
+            action = self.statement()
+            return [condition, action]
+        elif self.tokens[self.idx - 1].value == "do":
+            action = self.statement()
+            return [condition, action]
+
+    def if_statements(self):
+        conditions = []
+        actions = []
+        if_statement = self.if_statement()
+
+        conditions.append(if_statement[0])
+        actions.append(if_statement[1])
+
+        while self.token.value == "elif":
+            if_statement = self.if_statements()
+            conditions.append(if_statement[0])
+            actions.append(if_statement[1])
+
+        if self.token.value == "else":
+            self.advance()
+            self.advance()
+            else_action = self.statement()
+
+            return [conditions, actions, else_action]
+
+        return [conditions, actions]
 
     def parse(self):
         return self.statement()
