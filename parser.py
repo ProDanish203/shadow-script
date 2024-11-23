@@ -83,6 +83,8 @@ class Parser:
 
         elif self.token.value == "if":
             return [self.token, self.if_statements()]
+        elif self.token.value == "while":
+            return [self.token, self.while_statement()]
 
     def variable(self):
         if self.token.type.startswith("VAR"):
@@ -141,6 +143,19 @@ class Parser:
             return [conditions, actions, else_action]
 
         return [conditions, actions]
+
+    def while_statement(self):
+        self.advance()
+        condition = self.boolean_expr()
+
+        if self.token.value == "do":
+            self.advance()
+            action = self.statement()
+            return [condition, action]
+
+        elif self.tokens[self.idx - 1].value == "do":
+            action = self.statement()
+            return [condition, action]
 
     def parse(self):
         return self.statement()

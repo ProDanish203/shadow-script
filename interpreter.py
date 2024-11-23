@@ -85,16 +85,25 @@ class Interpreter:
         # Conditional
         if isinstance(tree, list):
             if isinstance(tree[0], Reserved):
-                for idx, condition in enumerate(tree[1][0]):
-                    evaluation = self.interpret(condition)
-                    if evaluation.value == 1:
-                        return self.interpret(tree[1][1][idx])
+                if tree[0].value == "if":
+                    for idx, condition in enumerate(tree[1][0]):
+                        evaluation = self.interpret(condition)
+                        if evaluation.value == 1:
+                            return self.interpret(tree[1][1][idx])
+                        else:
+                            return 0
+                    if len(tree[1]) == 3:
+                        return self.interpret(tree[1][2])
                     else:
-                        return 0
-                if len(tree[1]) == 3:
-                    return self.interpret(tree[1][2])
-                else:
-                    return False
+                        return False
+                elif tree[0].value == "while":
+                    condition = self.interpret(tree[1][0])
+                    while condition.value == 1:
+                        # Action
+                        print(self.interpret(tree[1][1]))
+                        # Condition
+                        condition = self.interpret(tree[1][0])
+                    return
 
         # Unary operation
         if isinstance(tree, list) and len(tree) == 2:

@@ -22,7 +22,8 @@ while True:
         interpreter = Interpreter(tree, base)
         result = interpreter.interpret()
 
-        print(result)
+        if result is not None:
+            print(result)
 
     except Exception as e:
         print(f"An error occurred: {e}")

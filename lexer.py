@@ -35,7 +35,7 @@ class Lexer:
     boolean = ["and", "or", "not"]
     comparison = ["?=", "<>", ">", "<", ">=", "<="]
     special_characters = "><=?"
-    reserved = ["if", "else", "elif", "do"]
+    reserved = ["if", "else", "elif", "do", "while"]
 
     def __init__(self, text):
         self.text = text  # input string, e.g. "2 + 3"
